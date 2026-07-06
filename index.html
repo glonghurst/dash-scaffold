@@ -1,372 +1,402 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YOUGOTDISS.COM &mdash; DASH External Alpha</title>
-  <style>
-      /* ============================================================
-         DASH EXTERNAL ALPHA -- UI SHELL v2026.07.06
-         Static shell only. No auth, no uploads, no backend logic.
-         See inline PLACEHOLDER comments for future integration points.
-         ============================================================ */
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YOUGOTDISS.COM — DASH External Alpha</title>
+<style>
+  /* ============================================================
+     DASH EXTERNAL ALPHA — UI SHELL v2026.07.06
+     Static shell only. No auth, no upload, no backend logic.
+     See inline PLACEHOLDER comments for future integration points.
+     ============================================================ */
 
-      :root {
-            --phosphor: #33ff66;
-            --phosphor-dim: #1a6b33;
-            --phosphor-dimmer: #0d3d1c;
-            --bg: #000000;
-            --panel-bg: #050805;
-            --border: rgba(51, 255, 102, 0.35);
-            --border-dim: rgba(51, 255, 102, 0.15);
-            --mono: 'Courier New', Courier, monospace;
-      }
+  :root {
+    --phosphor: #33ff66;
+    --phosphor-dim: #1a6b33;
+    --phosphor-dimmer: #0d3d1c;
+    --bg: #000000;
+    --panel-bg: #050805;
+    --border: rgba(51, 255, 102, 0.35);
+    --border-dim: rgba(51, 255, 102, 0.15);
+    --mono: 'Courier New', Courier, monospace;
+  }
 
-      * { box-sizing: border-box; }
+  * { box-sizing: border-box; }
 
-      html, body {
-            margin: 0;
-            padding: 0;
-            background: var(--bg);
-            color: var(--phosphor);
-            font-family: var(--mono);
-            min-height: 100%;
-      }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--phosphor);
+    font-family: var(--mono);
+    min-height: 100%;
+  }
 
-      body {
-            background-image: repeating-linear-gradient(
-                    to bottom,
-                    rgba(51, 255, 102, 0.025) 0px,
-                    rgba(51, 255, 102, 0.025) 1px,
-                    transparent 1px,
-                    transparent 3px
-                  );
-      }
+  /* Static CRT scanline texture — no animation, just a subtle repeating overlay */
+  body {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      rgba(51, 255, 102, 0.025) 0px,
+      rgba(51, 255, 102, 0.025) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  }
 
-      .shell {
-            max-width: 980px;
-            margin: 0 auto;
-            padding: 24px 20px 60px;
-      }
+  .shell {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
 
-      a { color: var(--phosphor); }
+  a { color: var(--phosphor); }
 
-      header.top-banner {
-            position: relative;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 16px;
-            margin-bottom: 28px;
-      }
+  /* ---------------------------------------------------------
+     HEADER / TOP BANNER
+     --------------------------------------------------------- */
+  header.top-banner {
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    margin-bottom: 28px;
+  }
 
-      .version-tag {
-            position: absolute;
-            top: 0;
-            right: 0;
-            font-size: 11px;
-            color: var(--phosphor-dim);
-            letter-spacing: 0.05em;
-      }
+  .version-tag {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 11px;
+    color: var(--phosphor-dim);
+    letter-spacing: 0.05em;
+  }
 
-      .site-title {
-            font-size: clamp(28px, 5vw, 48px);
-            font-weight: bold;
-            letter-spacing: 0.04em;
-            text-shadow: 0 0 6px var(--phosphor), 0 0 18px rgba(51,255,102,0.5);
-            margin: 0;
-      }
+  .site-title {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    text-shadow: 0 0 6px var(--phosphor), 0 0 18px rgba(51,255,102,0.5);
+    margin: 0;
+  }
 
-      .site-subtitle {
-            font-size: 14px;
-            color: var(--phosphor-dim);
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin-top: 6px;
-      }
+  .site-subtitle {
+    font-size: 14px;
+    color: var(--phosphor-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
 
-      .panel {
-            border: 1px solid var(--border);
-            background: var(--panel-bg);
-            border-radius: 4px;
-            padding: 18px 20px;
-            margin-bottom: 22px;
-      }
+  /* ---------------------------------------------------------
+     PANEL — shared base styling for every section box
+     --------------------------------------------------------- */
+  .panel {
+    border: 1px solid var(--border);
+    background: var(--panel-bg);
+    border-radius: 4px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
+  }
 
-      .panel-title {
-            font-size: 13px;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--phosphor);
-            border-bottom: 1px solid var(--border-dim);
-            padding-bottom: 8px;
-            margin-bottom: 14px;
-      }
+  .panel-title {
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--phosphor);
+    border-bottom: 1px solid var(--border-dim);
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+  }
 
-      .ingest-zone {
-            border: 2px dashed var(--border);
-            border-radius: 6px;
-            min-height: 160px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: var(--phosphor-dim);
-            opacity: 0.55;
-            cursor: not-allowed;
-            user-select: none;
-            padding: 20px;
-      }
+  .panel-title .tag {
+    float: right;
+    font-size: 10px;
+    color: var(--phosphor-dim);
+    letter-spacing: 0.1em;
+    text-transform: none;
+  }
 
-      .ingest-zone .primary {
-            font-size: 16px;
-            letter-spacing: 0.05em;
-      }
+  /* ---------------------------------------------------------
+     A. INGEST — drag-and-drop rectangle (inert placeholder)
+     --------------------------------------------------------- */
+  .ingest-zone {
+    border: 2px dashed var(--border);
+    border-radius: 6px;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--phosphor-dim);
+    opacity: 0.55;
+    cursor: not-allowed;
+    user-select: none;
+    padding: 20px;
+  }
 
-      .ingest-zone .secondary {
-            font-size: 12px;
-            margin-top: 8px;
-            color: var(--phosphor-dimmer);
-      }
+  .ingest-zone .primary {
+    font-size: 16px;
+    letter-spacing: 0.05em;
+  }
 
-      .row-two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 22px;
-      }
+  .ingest-zone .secondary {
+    font-size: 12px;
+    margin-top: 8px;
+    color: var(--phosphor-dimmer);
+  }
 
-      @media (max-width: 720px) {
-            .row-two-col { grid-template-columns: 1fr; }
-      }
+  /* ---------------------------------------------------------
+     Two-column layout for PIPELINE STATUS + CLIP METADATA
+     --------------------------------------------------------- */
+  .row-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
 
-      .stage-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            font-size: 14px;
-            line-height: 2;
-      }
+  @media (max-width: 720px) {
+    .row-two-col { grid-template-columns: 1fr; }
+  }
 
-      .stage-list li {
-            color: var(--phosphor-dim);
-            letter-spacing: 0.03em;
-      }
+  /* ---------------------------------------------------------
+     B. PIPELINE STATUS — static stage list
+     --------------------------------------------------------- */
+  .stage-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    line-height: 2;
+  }
 
-      .stage-list li::before {
-            content: "\25CB  ";
-            color: var(--phosphor-dim);
-      }
+  .stage-list li {
+    color: var(--phosphor-dim);
+    letter-spacing: 0.03em;
+  }
 
-      .meta-list {
-            font-size: 13px;
-      }
+  .stage-list li::before {
+    content: "○ ";
+    color: var(--phosphor-dim);
+  }
 
-      .meta-row {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px dotted var(--border-dim);
-            padding: 6px 0;
-      }
+  /* ---------------------------------------------------------
+     C. CLIP METADATA — read-only field list
+     --------------------------------------------------------- */
+  .meta-list {
+    font-size: 13px;
+  }
 
-      .meta-row:last-child { border-bottom: none; }
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dotted var(--border-dim);
+    padding: 6px 0;
+  }
 
-      .meta-label {
-            color: var(--phosphor-dim);
-            letter-spacing: 0.05em;
-      }
+  .meta-row:last-child { border-bottom: none; }
 
-      .meta-value {
-            color: var(--phosphor);
-            opacity: 0.7;
-      }
+  .meta-label {
+    color: var(--phosphor-dim);
+    letter-spacing: 0.05em;
+  }
 
-      .return-list {
-            list-style: none;
-            margin: 0 0 10px 0;
-            padding: 0;
-            font-size: 13px;
-            line-height: 1.9;
-            color: var(--phosphor-dim);
-      }
+  .meta-value {
+    color: var(--phosphor);
+    opacity: 0.7;
+  }
 
-      .return-list li::before {
-            content: "\00B7  ";
-      }
+  /* ---------------------------------------------------------
+     D. RETURN PACKAGE
+     --------------------------------------------------------- */
+  .return-list {
+    list-style: none;
+    margin: 0 0 10px 0;
+    padding: 0;
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--phosphor-dim);
+  }
 
-      .return-note {
-            font-size: 11px;
-            color: var(--phosphor-dimmer);
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-      }
+  .return-list li::before {
+    content: "· ";
+  }
 
-      .donate-panel {
-            text-align: center;
-      }
+  .return-note {
+    font-size: 11px;
+    color: var(--phosphor-dimmer);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
 
-      .donate-panel .prompt {
-            font-size: 13px;
-            color: var(--phosphor-dim);
-            margin-bottom: 12px;
-      }
+  /* ---------------------------------------------------------
+     E. DONATE
+     --------------------------------------------------------- */
+  .donate-panel {
+    text-align: center;
+  }
 
-      .donate-button {
-            display: inline-block;
-            border: 1px solid var(--border);
-            color: var(--phosphor-dim);
-            padding: 8px 22px;
-            font-family: var(--mono);
-            font-size: 13px;
-            letter-spacing: 0.1em;
-            border-radius: 3px;
-            background: transparent;
-            cursor: not-allowed;
-            opacity: 0.6;
-      }
+  .donate-panel .prompt {
+    font-size: 13px;
+    color: var(--phosphor-dim);
+    margin-bottom: 12px;
+  }
 
-      .donate-qr-note {
-            font-size: 11px;
-            color: var(--phosphor-dimmer);
-            margin-top: 10px;
-      }
+  .donate-button {
+    display: inline-block;
+    border: 1px solid var(--border);
+    color: var(--phosphor-dim);
+    padding: 8px 22px;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    border-radius: 3px;
+    background: transparent;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 
-      footer.alpha-notice {
-            border-top: 1px solid var(--border-dim);
-            margin-top: 10px;
-            padding-top: 16px;
-            font-size: 11px;
-            line-height: 1.8;
-            color: var(--phosphor-dimmer);
-            letter-spacing: 0.03em;
-      }
+  .donate-qr-note {
+    font-size: 11px;
+    color: var(--phosphor-dimmer);
+    margin-top: 10px;
+  }
 
-      footer.alpha-notice p {
-            margin: 0 0 4px 0;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="shell">
+  /* ---------------------------------------------------------
+     F. ALPHA NOTICE — footer
+     --------------------------------------------------------- */
+  footer.alpha-notice {
+    border-top: 1px solid var(--border-dim);
+    margin-top: 10px;
+    padding-top: 16px;
+    font-size: 11px;
+    line-height: 1.8;
+    color: var(--phosphor-dimmer);
+    letter-spacing: 0.03em;
+  }
 
-        <!-- ============================================================
-             HEADER / TOP BANNER
-             Site title + subtitle + version tag.
-             AUTH PLACEHOLDER: future login/magic-link entry point mounts
-             near this header (e.g. a "Sign in" link top-right, next to
-             the version tag, once invite-only email auth exists).
-             ============================================================ -->
-        <header class="top-banner">
-              <div class="version-tag">v2026.07.06</div>div>
-              <h1 class="site-title">YOUGOTDISS.COM</h1>h1>
-              <div class="site-subtitle">DASH External Alpha</div>div>
-        </header>header>
+  footer.alpha-notice p {
+    margin: 0 0 4px 0;
+  }
+</style>
+</head>
+<body>
+<div class="shell">
 
-        <main>
+  <!-- ============================================================
+       HEADER / TOP BANNER
+       Site title + subtitle + version tag.
+       AUTH PLACEHOLDER: future login/magic-link entry point mounts
+       near this header (e.g. a "Sign in" link top-right, next to
+       the version tag, once invite-only email auth exists).
+       ============================================================ -->
+  <header class="top-banner">
+    <div class="version-tag">v2026.07.06</div>
+    <h1 class="site-title">YOUGOTDISS.COM</h1>
+    <div class="site-subtitle">DASH External Alpha</div>
+  </header>
 
-              <!-- ==========================================================
-                   A. INGEST PANEL
-                   UPLOAD PLACEHOLDER: future drag-and-drop file upload
-                   handler (client-side dropzone + server-side ingest
-                   endpoint) mounts inside this panel. Currently inert --
-                   greyed out, non-interactive, no JS attached.
-                   ========================================================== -->
-              <section class="panel" id="panel-ingest">
-                      <div class="panel-title">Ingest</div>div>
-                      <div class="ingest-zone" aria-disabled="true">
-                                <div>
-                                            <div class="primary">Drop gameplay clips here</div>
-                                            <div class="secondary">(coming soon)</div>
-                                </div>
-                      </div>
-              </section>section>
+  <main>
 
-              <div class="row-two-col">
+    <!-- ==========================================================
+         A. INGEST PANEL
+         UPLOAD PLACEHOLDER: future drag-and-drop file upload
+         handler (client-side dropzone + server-side ingest
+         endpoint) mounts inside this panel. Currently inert —
+         greyed out, non-interactive, no JS attached.
+         ========================================================== -->
+    <section class="panel" id="panel-ingest">
+      <div class="panel-title">Ingest</div>
+      <div class="ingest-zone" aria-disabled="true">
+        <div>
+          <div class="primary">Drop gameplay clips here</div>
+          <div class="secondary">(coming soon)</div>
+        </div>
+      </div>
+    </section>
 
-                      <!-- ========================================================
-                           B. PIPELINE STATUS PANEL
-                           PIPELINE TELEMETRY PLACEHOLDER: future live stage
-                           updates (received/queued/copying/encoding/packaging/
-                           complete) will bind to these list items, likely by
-                           toggling a class per stage. Static text only today.
-                           ======================================================== -->
-                      <section class="panel" id="panel-pipeline-status">
-                                <div class="panel-title">Pipeline Status</div>
-                                <ul class="stage-list">
-                                            <li>Received</li>
-                                          <li>Queued</li>
-                                          <li>Copying</li>
-                                          <li>Encoding</li>
-                                          <li>Packaging</li>
-                                          <li>Complete</li>
-                                </ul>ul>
-                      </section>section>
-              
-                    <!-- ========================================================
-                         C. CLIP METADATA PANEL (read-only)
-                         METADATA BINDING: future backend will populate these
-                         fields (filename, owner, game, session date, clip
-                         length, status) after a submission is received.
-                         All values are static "--" placeholders today.
-                         ======================================================== -->
-                    <section class="panel" id="panel-clip-metadata">
-                            <div class="panel-title">Clip Metadata</div>
-                            <div class="meta-list">
-                                      <div class="meta-row"><span class="meta-label">Filename</span>span><span class="meta-value">--</span>span></div>
-                                      <div class="meta-row"><span class="meta-label">Owner</span>span><span class="meta-value">--</span>span></div>
-                                      <div class="meta-row"><span class="meta-label">Game</span>span><span class="meta-value">--</span>span></div>
-                                      <div class="meta-row"><span class="meta-label">Session Date</span>span><span class="meta-value">--</span>span></div>
-                                      <div class="meta-row"><span class="meta-label">Clip Length</span>span><span class="meta-value">--</span>span></div>
-                                      <div class="meta-row"><span class="meta-label">Status</span>span><span class="meta-value">--</span>span></div>
-                            </div>
-                    </section>section>
-              
-              </div>
-        
-            <!-- ==========================================================
-                 D. RETURN PACKAGE PANEL
-                 RETURN PACKAGE: future backend will populate download
-                 links/status for each of these artifacts once processing
-                 completes for a submission. Static placeholder list today.
-                 ========================================================== -->
-            <section class="panel" id="panel-return-package">
-                  <div class="panel-title">Return Package</div>
-                  <ul class="return-list">
-                          <li>Transcript</li>
-                          <li>Compressed MP4</li>
-                          <li>Metadata JSON</li>
-                          <li>Summary</li>
-                  </ul>ul>
-                  <div class="return-note">Available after processing.</div>
-            </section>section>
-        
-            <!-- ==========================================================
-                 E. DONATE PANEL
-                 DONATION MODULE: future payment link + QR code image
-                 mounts here. Button is currently disabled/non-functional.
-                 ========================================================== -->
-            <section class="panel donate-panel" id="panel-donate">
-                  <div class="prompt">Support future development</div>
-                  <div class="donate-button">[ Donate ]</div>
-                  <div class="donate-qr-note">(QR coming soon)</div>
-            </section>section>
-        
-        </main>
-    
-      <!-- ============================================================
-           F. ALPHA NOTICE FOOTER
-           Static disclaimer copy. No logic.
-           ============================================================ -->
-      <footer class="alpha-notice">
-          <p>Invite-only alpha.</p>
-          <p>Returned assets may be deleted within 30 days.</p>
-          <p>Processing may fail.</p>
-          <p>Do not upload confidential material.</p>
-      </footer>footer>
-    
+    <div class="row-two-col">
+
+      <!-- ========================================================
+           B. PIPELINE STATUS PANEL
+           PIPELINE TELEMETRY PLACEHOLDER: future live stage
+           updates (received/queued/copying/encoding/packaging/
+           complete) will bind to these list items, likely by
+           toggling a class per stage. Static text only today.
+           ======================================================== -->
+      <section class="panel" id="panel-pipeline-status">
+        <div class="panel-title">Pipeline Status</div>
+        <ul class="stage-list">
+          <li>Received</li>
+          <li>Queued</li>
+          <li>Copying</li>
+          <li>Encoding</li>
+          <li>Packaging</li>
+          <li>Complete</li>
+        </ul>
+      </section>
+
+      <!-- ========================================================
+           C. CLIP METADATA PANEL (read-only)
+           METADATA BINDING: future backend will populate these
+           fields (filename, owner, game, session date, clip
+           length, status) after a submission is received.
+           All values are static "--" placeholders today.
+           ======================================================== -->
+      <section class="panel" id="panel-clip-metadata">
+        <div class="panel-title">Clip Metadata</div>
+        <div class="meta-list">
+          <div class="meta-row"><span class="meta-label">Filename</span><span class="meta-value">--</span></div>
+          <div class="meta-row"><span class="meta-label">Owner</span><span class="meta-value">--</span></div>
+          <div class="meta-row"><span class="meta-label">Game</span><span class="meta-value">--</span></div>
+          <div class="meta-row"><span class="meta-label">Session Date</span><span class="meta-value">--</span></div>
+          <div class="meta-row"><span class="meta-label">Clip Length</span><span class="meta-value">--</span></div>
+          <div class="meta-row"><span class="meta-label">Status</span><span class="meta-value">--</span></div>
+        </div>
+      </section>
+
     </div>
-  </body>
-</html>html>
-</p></p></li></li>
-                                </div>
-        </main>
-  </body>
-  </style></title>
-  </head>
+
+    <!-- ==========================================================
+         D. RETURN PACKAGE PANEL
+         RETURN PACKAGE: future backend will populate download
+         links/status for each of these artifacts once processing
+         completes for a submission. Static placeholder list today.
+         ========================================================== -->
+    <section class="panel" id="panel-return-package">
+      <div class="panel-title">Return Package</div>
+      <ul class="return-list">
+        <li>Transcript</li>
+        <li>Compressed MP4</li>
+        <li>Metadata JSON</li>
+        <li>Summary</li>
+      </ul>
+      <div class="return-note">Available after processing.</div>
+    </section>
+
+    <!-- ==========================================================
+         E. DONATE PANEL
+         DONATION MODULE: future payment link + QR code image
+         mounts here. Button is currently disabled/non-functional.
+         ========================================================== -->
+    <section class="panel donate-panel" id="panel-donate">
+      <div class="prompt">Support future development</div>
+      <div class="donate-button">[ Donate ]</div>
+      <div class="donate-qr-note">(QR coming soon)</div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       F. ALPHA NOTICE FOOTER
+       Static disclaimer copy. No logic.
+       ============================================================ -->
+  <footer class="alpha-notice">
+    <p>Invite-only alpha.</p>
+    <p>Returned assets may be deleted within 30 days.</p>
+    <p>Processing may fail.</p>
+    <p>Do not upload confidential material.</p>
+  </footer>
+
+</div>
+</body>
+</html>
